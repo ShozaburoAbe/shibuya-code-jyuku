@@ -5,6 +5,7 @@
     private static $year;
     private static $month;
     private static $day;
+    private $lastdays = [31,28,31,30,31,30,31,31,30,31,30,31];
 
     public function inputDay() {
       echo "日付を入力せよ。\n";
@@ -73,16 +74,29 @@
           $this->day -= 1;
         break;
         case 7:
-          echo "何日：";  //case7とcase8で大きな数を足した時に日にちを繰り上げにできないです。 ex. 85日みたいになってしまいます。。
+          echo "何日：";  
           $d = trim(fgets(STDIN));
           $this->day += $d;
+          while ($this->day > $endD) {
+            $endD = $this->lastdays[$this->month -1];
+            if ($this->day > $endD) {
+              $this->month += 1;
+              $this->day = $this->day - $endD;
+            }
+          } 
           $this->datetime->add(new DateInterval("P{$d}D"));
         break;
         case 8:
           echo "何日：";
           $d = trim(fgets(STDIN));
           $this->day -= $d;
-          $nd = gmp_neg($d);
+          while ($this->day > $endD) {
+            $endD = $this->lastdays[$this->month -1];
+            if ($this->day > $endD) {
+              $this->month += 1;
+              $this->day = $this->day - $endD;
+            }
+          } 
           $this->datetime->add(new DateInterval("P{$d}D"));
         break;
         default:
